@@ -13,13 +13,13 @@ def ingest_nba():
     headers = {
       'Authorization': f'{token}'
     }
-    conn.request("GET", f"/v1/games?start_date={pv.yesterday}&end_date={pv.today}", payload, headers)
+    conn.request("GET", f"/v1/games?start_date={pv.thirty_days}&end_date={pv.today}", payload, headers)
     res = conn.getresponse()
     data = res.read()
     games = json.loads(data)['data']
 
     for game in games:
-        data_list.append(['NBA', game['id'], game['date'], game['status'], game['postseason'], game['home_team_score'], game['visitor_team_score'], game['home_team']['id'], game['visitor_team']['id']])
+        data_list.append(['NBA', game['id'], game['date'], game['status'], game['postseason'], game['home_team_score'], game['visitor_team_score'], game['home_team']['id'], game['home_team']['full_name'], game['visitor_team']['id'], game['visitor_team']['full_name']])
 
-    df = pd.DataFrame(data_list, columns=['league', 'game_id', 'game_date', 'game_postseason_flg', 'game_status', 'game_home_tm_score', 'game_road_tm_score', 'home_tm_id', 'road_team_id'])
+    df = pd.DataFrame(data_list, columns=['league', 'game_id', 'game_date', 'game_postseason_flg', 'game_status', 'game_home_tm_score', 'game_road_tm_score', 'home_tm_id', 'home_team_nm', 'road_team_id', 'road_team_nm'])
     return df
